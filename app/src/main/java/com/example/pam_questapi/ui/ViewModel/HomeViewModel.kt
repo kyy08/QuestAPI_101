@@ -4,8 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import coil.network.HttpException
 import com.example.pam_questapi.model.Mahasiswa
 import com.example.pam_questapi.repository.MahasiswaRepository
+import kotlinx.coroutines.launch
+import java.io.IOException
 
 sealed class HomeUiState{ // Digunakan untuk membatasi subclass yang dapat di-extend dari kelas ini.
 
@@ -30,3 +34,43 @@ class HomeViewModel(private val mhs: MahasiswaRepository): ViewModel() {
     init {
         getMhs()
     }
+
+    fun getMhs() {
+        viewModelScope.launch {
+
+            // Set state ke Loading untuk menunjukkan bahwa data sedang diproses.
+            mhsUiState = HomeUiState.Loading
+
+            // Mencoba mengambil data mahasiswa dari repository menggunakan blok try-catch.
+            mhsUiState = try {
+
+                // Jika berhasil, state diubah menjadi Success dengan daftar mahasiswa sebagai datanya.
+                HomeUiState.Success(mhs.getMahasiswa())
+            }catch (e: IOException) {
+
+                // Jika terjadi kesalahan jaringan atau I/O, set state ke Error.
+                HomeUiState.Error
+            }catch (e: HttpException) {
+
+                // Jika terjadi kesalahan HTTP (misalnya, 404 atau 500), set state ke Error.
+                HomeUiState.Error
+            }
+        }
+    }
+
+    fun deleteMhs(nim: String) {
+        viewModelScope.launch {
+
+            // Menggunakan blok try-catch untuk menangani kemungkinan kesalahan selama proses penghapusan.
+            try {
+
+                // Memanggil fungsi deleteMahasiswa pada repository untuk menghapus data mahasiswa berdasarkan NIM.
+                mhs.deleteMahasiswa(nim)
+            }catch (e: IOException) {
+                HomeUiState.Error
+            }catch (e: HttpException) {
+                HomeUiState.Error
+            }
+        }
+    }
+}
