@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -104,5 +106,83 @@ fun EntryBody(
         ) {
             Text(text = "Simpan")
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FormInput(
+    insertUiEvent: InsertUiEvent,
+    modifier: Modifier = Modifier,
+    onSiswaValueChange: (InsertUiEvent) -> Unit = {},
+    enabled: Boolean = true
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        OutlinedTextField(
+            value = insertUiEvent.nim,
+            onValueChange = { onSiswaValueChange(insertUiEvent.copy(nim = it.trim())) },
+            label = { Text(text = "NIM") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+
+        OutlinedTextField(
+            value = insertUiEvent.nama,
+            onValueChange = { onSiswaValueChange(insertUiEvent.copy(nama = it.trim())) },
+            label = { Text("Nama") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+
+        OutlinedTextField(
+            value = insertUiEvent.jenisKelamin,
+            onValueChange = { onSiswaValueChange(insertUiEvent.copy(jenisKelamin = it.trim())) },
+            label = { Text("Jenis Kelamin") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+
+        OutlinedTextField(
+            value = insertUiEvent.alamat,
+            onValueChange = { onSiswaValueChange(insertUiEvent.copy(alamat = it.trim())) },
+            label = { Text("Alamat") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+
+        OutlinedTextField(
+            value = insertUiEvent.kelas,
+            onValueChange = { onSiswaValueChange(insertUiEvent.copy(kelas = it.trim())) },
+            label = { Text("Kelas") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+
+        OutlinedTextField(
+            value = insertUiEvent.angkatan,
+            onValueChange = { onSiswaValueChange(insertUiEvent.copy(angkatan = it.trim())) },
+            label = { Text("Angkatan") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+        if (enabled) {
+            Text(
+                text = "Isi Semua Data!",
+                modifier = Modifier.padding(12.dp)
+            )
+        }
+        Divider(
+            thickness = 8.dp,
+            modifier = Modifier.padding(12.dp)
+        )
     }
 }
